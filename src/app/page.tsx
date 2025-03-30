@@ -269,6 +269,19 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
               />
             </div>
           )}
+          <div className="mt-4 flex justify-center">
+            <a 
+              href="/api/starting-hand" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded inline-flex items-center transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              APIを直接試す
+            </a>
+          </div>
         </div>
       </section>
 
