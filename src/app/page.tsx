@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import JSCode from '@/components/elements/Code/JSCode';
+import H2 from '@/components/elements/Text/H2';
 
 export default function StartingHand() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -32,7 +33,7 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
     const url = `/api/starting-hand?t=${new Date().getTime()}`;
     setImageUrl(url);
     setIsLoading(false);
-    
+
     // Update examples with the actual domain
     if (typeof window !== 'undefined') {
       const domain = window.location.origin;
@@ -46,9 +47,8 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-3xl font-bold mb-6">麻雀配牌API</h1>
-      
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">概要</h2>
+        <H2>概要</H2>
         <p className="mb-2">
           この麻雀配牌APIは、麻雀の初期手牌（配牌）をランダムに生成し、画像として返すサービスです。
           ゲーム開発や麻雀アプリケーション、教育用途、統計分析などに利用できます。
@@ -56,7 +56,7 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">使い方</h2>
+        <H2>使い方</H2>
         <div className="bg-gray-100 p-4 rounded-md mb-4">
           <code>GET /api/starting-hand</code>
         </div>
@@ -67,7 +67,7 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">レスポンス</h2>
+        <H2>レスポンス</H2>
         <p className="mb-2">
           APIは1000x300ピクセルのサイズの画像ファイルを返します。画像には麻雀の配牌（通常13枚）が描画されています。
         </p>
@@ -108,8 +108,8 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">使用例</h2>
-        
+        <H2>使用例</H2>
+
         {examples.map((example, idx) => (
           <JSCode code={example.code} key={idx}/>
         ))}
@@ -126,7 +126,7 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">注意事項</h2>
+        <H2>注意事項</H2>
         <ul className="list-disc pl-6">
           <li className="mb-2">このAPIは教育・研究・個人利用目的で自由に使用できます</li>
           <li className="mb-2">商用利用の場合は、お問い合わせください</li>
