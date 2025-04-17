@@ -28,13 +28,11 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
     }
   ]);
 
-  useEffect(() => {
-    // Add timestamp to avoid caching issues
+  const handleImageLoad = () => {
     const url = `/api/starting-hand?t=${new Date().getTime()}`;
     setImageUrl(url);
     setIsLoading(false);
 
-    // Update examples with the actual domain
     if (typeof window !== 'undefined') {
       const domain = window.location.origin;
       setExamples(prev => prev.map(example => ({
@@ -42,6 +40,10 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
         code: example.code.replace(/https:\/\/your-domain\.com/g, domain)
       })));
     }
+  };
+
+  useEffect(() => {
+    handleImageLoad();
   }, []);
 
   return (
@@ -91,7 +93,16 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
               />
             </div>
           )}
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4 flex gap-3 justify-center">
+            <button
+              className='bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded inline-flex items-center transition-colors cursor-pointer'
+              onClick={handleImageLoad}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              再取得
+            </button>
             <a 
               href="/api/starting-hand" 
               target="_blank" 
