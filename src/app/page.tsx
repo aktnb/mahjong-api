@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import JSCode from '@/components/elements/Code/JSCode';
 
 export default function StartingHand() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [examples, setExamples] = useState([
     {
       title: "HTMLでの使用例",
@@ -42,184 +42,6 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
       })));
     }
   }, []);
-
-  const copyToClipboard = (text: string, index: number) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedIndex(index);
-      setTimeout(() => setCopiedIndex(null), 2000);
-    });
-  };
-
-  // Function to tokenize JavaScript code into segments for highlighting
-  const tokenizeJavaScript = (code: string) => {
-    // Create segments with type information
-    const commentRegex = /(\/\/.*)/g;
-    const stringRegex = /('.*?'|".*?")/g;
-    const keywordRegex = /\b(const|let|var|function|return|new|document|addEventListener)\b/g;
-    const methodRegex = /\b(getElementById|addEventListener|src|getTime)\b/g;
-    const classRegex = /\b(Date)\b/g;
-    
-    // Split by comments first
-    const segments: {text: string, type: string}[] = [];
-    let lastIndex = 0;
-    let match;
-    
-    // Find comments
-    while ((match = commentRegex.exec(code)) !== null) {
-      if (match.index > lastIndex) {
-        segments.push({
-          text: code.substring(lastIndex, match.index),
-          type: 'normal'
-        });
-      }
-      segments.push({
-        text: match[0],
-        type: 'comment'
-      });
-      lastIndex = match.index + match[0].length;
-    }
-    
-    // Add remaining text
-    if (lastIndex < code.length) {
-      segments.push({
-        text: code.substring(lastIndex),
-        type: 'normal'
-      });
-    }
-    
-    // Further process each segment that's not a comment
-    const processedSegments: {text: string, type: string}[] = [];
-    
-    segments.forEach(segment => {
-      if (segment.type === 'comment') {
-        processedSegments.push(segment);
-        return;
-      }
-      
-      // Process strings
-      const text = segment.text;
-      const parts: {text: string, type: string}[] = [];
-      lastIndex = 0;
-      
-      while ((match = stringRegex.exec(text)) !== null) {
-        if (match.index > lastIndex) {
-          parts.push({
-            text: text.substring(lastIndex, match.index),
-            type: 'normal'
-          });
-        }
-        parts.push({
-          text: match[0],
-          type: 'string'
-        });
-        lastIndex = match.index + match[0].length;
-      }
-      
-      if (lastIndex < text.length) {
-        parts.push({
-          text: text.substring(lastIndex),
-          type: 'normal'
-        });
-      }
-      
-      // Process remaining normal text for keywords, methods, classes
-      parts.forEach(part => {
-        if (part.type !== 'normal') {
-          processedSegments.push(part);
-          return;
-        }
-        
-        let normalText = part.text;
-        normalText = normalText
-          .replace(keywordRegex, '<keyword>$1</keyword>')
-          .replace(methodRegex, '<method>$1</method>')
-          .replace(classRegex, '<class>$1</class>');
-        
-        // Split by our custom tags
-        const tagRegex = /<(keyword|method|class)>(.*?)<\/\1>/g;
-        const normalParts: {text: string, type: string}[] = [];
-        lastIndex = 0;
-        
-        while ((match = tagRegex.exec(normalText)) !== null) {
-          if (match.index > lastIndex) {
-            normalParts.push({
-              text: normalText.substring(lastIndex, match.index),
-              type: 'normal'
-            });
-          }
-          normalParts.push({
-            text: match[2],
-            type: match[1]
-          });
-          lastIndex = match.index + match[0].length;
-        }
-        
-        if (lastIndex < normalText.length) {
-          normalParts.push({
-            text: normalText.substring(lastIndex),
-            type: 'normal'
-          });
-        }
-        
-        processedSegments.push(...normalParts);
-      });
-    });
-    
-    return processedSegments;
-  };
-
-  // Render function for code examples
-  const renderCodeExample = (example: { title: string, code: string }, index: number) => {
-    // Apply highlighting only to JavaScript example
-    const isJavaScript = example.title.includes("JavaScript");
-    const segments = isJavaScript ? tokenizeJavaScript(example.code) : null;
-    
-    return (
-      <div key={index}>
-        <h3 className="text-xl font-medium mt-6 mb-3">{example.title}</h3>
-        <div className="bg-gray-100 p-4 rounded-md mb-4 relative">
-          <button 
-            className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded p-1 text-xs flex items-center"
-            onClick={() => copyToClipboard(example.code, index)}
-            aria-label="コードをコピー"
-          >
-            {copiedIndex === index ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                コピー済み
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                コピー
-              </>
-            )}
-          </button>
-          
-          {isJavaScript && segments ? (
-            <pre className="overflow-auto">
-              {segments.map((segment, i) => {
-                const style = {
-                  color: segment.type === 'comment' ? '#4ade80' :
-                         segment.type === 'string' ? '#d97706' :
-                         segment.type === 'keyword' ? '#a855f7' :
-                         segment.type === 'method' ? '#3b82f6' :
-                         segment.type === 'class' ? '#ef4444' : 'inherit'
-                };
-                return <span key={i} style={style}>{segment.text}</span>;
-              })}
-            </pre>
-          ) : (
-            <pre className="overflow-auto">{example.code}</pre>
-          )}
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -288,7 +110,9 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">使用例</h2>
         
-        {examples.map((example, index) => renderCodeExample(example, index))}
+        {examples.map((example, idx) => (
+          <JSCode code={example.code} key={idx}/>
+        ))}
       </section>
 
       <section className="mb-8">
