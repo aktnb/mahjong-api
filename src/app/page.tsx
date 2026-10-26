@@ -43,7 +43,8 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
   };
 
   useEffect(() => {
-    handleImageLoad();
+    const frame = requestAnimationFrame(handleImageLoad);
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   return (
