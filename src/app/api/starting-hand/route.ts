@@ -155,7 +155,7 @@ export async function GET() {
 
   // Return the image as a response
   const buffer = canvas.toBuffer("image/png");
-  return new NextResponse(buffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "Content-Type": "image/png",
       "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
