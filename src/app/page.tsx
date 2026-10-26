@@ -89,6 +89,7 @@ document.getElementById('newHandBtn').addEventListener('click', () => {
                 alt="麻雀の配牌サンプル"
                 className="border border-gray-300"
                 fill
+                unoptimized
                 style={{ objectFit: "contain" }}
                 sizes="(max-width: 1200px) 100vw, 1000px"
               />
